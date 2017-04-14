@@ -358,5 +358,33 @@ namespace Vlc.DotNet.Core
             Manager.DetachEvent(vlcEventManager, EventTypes.MediaPlayerVout, myOnMediaPlayerVideoOutChangedInternalEventCallback);
             vlcEventManager.Dispose();
         }
+
+
+        #region subtitle 
+        [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int libvlc_video_set_spu(IntPtr p_mi, int i_spu);
+
+        [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int libvlc_video_set_subtitle_file(IntPtr p_mi, [MarshalAs(UnmanagedType.LPArray)] byte[] psz_subtitle);
+
+        public byte[] StringToUtf8(string str)
+        {
+            if (string.IsNullOrEmpty(str))
+            {
+                return null;
+            }
+            return System.Text.Encoding.UTF8.GetBytes(str);
+        }
+
+        public void SetSubTitle(string path)
+        {
+            if (path != null)
+                libvlc_video_set_subtitle_file(myMediaPlayerInstance, StringToUtf8(path));
+            else
+                libvlc_video_set_spu(myMediaPlayerInstance, -1);
+        }
+
+
+        #endregion
     }
 }

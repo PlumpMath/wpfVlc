@@ -15,5 +15,6 @@ namespace Vlc.DotNet.Wpf
             MediaPlayer = new Forms.VlcControl();
             this.Child = MediaPlayer; 
         }
+
     }
 }

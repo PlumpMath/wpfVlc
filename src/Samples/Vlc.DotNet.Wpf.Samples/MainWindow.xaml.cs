@@ -31,8 +31,8 @@ namespace Vlc.DotNet.Wpf.Samples
 
         private void OnPlayButtonClick(object sender, RoutedEventArgs e)
         {
-            myControl.MediaPlayer.Play(new Uri("http://download.blender.org/peach/bigbuckbunny_movies/big_buck_bunny_480p_surround-fix.avi"));
-            //myControl.MediaPlayer.Play(new FileInfo(@"..\..\..\Vlc.DotNet\Samples\Videos\BBB trailer.mov"));
+            //myControl.MediaPlayer.Play(new Uri("http://download.blender.org/peach/bigbuckbunny_movies/big_buck_bunny_480p_surround-fix.avi"));
+            myControl.MediaPlayer.Play(new FileInfo(@"r:\[UHA-Wing] [Nyanbo!][26][1080p][BIG5].mp4"));
         }
 
         private void OnForwardButtonClick(object sender, RoutedEventArgs e)
@@ -43,11 +43,13 @@ namespace Vlc.DotNet.Wpf.Samples
         private void GetLength_Click(object sender, RoutedEventArgs e)
         {
             GetLength.Content = myControl.MediaPlayer.Length + " ms";
+            myControl.MediaPlayer.SetSubTitle(null);
         }
 
         private void GetCurrentTime_Click(object sender, RoutedEventArgs e)
         {
             GetCurrentTime.Content = myControl.MediaPlayer.Time + " ms";
+            myControl.MediaPlayer.SetSubTitle(@"r:\[UHA-Wing] [Nyanbo!][26][1080p][BIG5].ass");
         }
 
         private void SetCurrentTime_Click(object sender, RoutedEventArgs e)

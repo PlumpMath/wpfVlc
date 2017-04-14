@@ -412,6 +412,13 @@ namespace Vlc.DotNet.Forms
             //EndInit();
             myVlcMediaPlayer.SetMedia(mrl, options);
         }
+
+        // set subtitle file
+        // if path is null, then disable subtitle
+        public void SetSubTitle(string path)
+        {
+            myVlcMediaPlayer.SetSubTitle(path);
+        }
         #endregion
     }
 }
