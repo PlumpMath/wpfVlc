@@ -419,6 +419,11 @@ namespace Vlc.DotNet.Forms
         {
             myVlcMediaPlayer.SetSubTitle(path);
         }
+
+        public float FPS
+        {
+            get { return myVlcMediaPlayer.FramesPerSecond; }
+        }
         #endregion
     }
 }

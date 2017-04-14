@@ -48,7 +48,7 @@ namespace WpfVlc
 
         void RegistCallback()
         {
-            //MediaPlayer.BackColor = ((System.Windows.Media.SolidColorBrush)this.Background).Color;
+            //MediaPlayer.BackColor = System.Drawing.Color.FromString(BackColor);
 
             
             MediaPlayer.VlcLibDirectoryNeeded += VlcLibDirectoryNeeded;
@@ -60,6 +60,8 @@ namespace WpfVlc
             MediaPlayer.LengthChanged += LengthChanged;
 
             MediaPlayer.EndReached += MediaPlayer_EndReached;
+
+           
 
         }
 
@@ -129,6 +131,7 @@ namespace WpfVlc
                 position = e.NewPosition;
 
                 RaisePropertyChanged("Position");
+                RaisePropertyChanged("FPS");
 
             }));
 
@@ -302,6 +305,15 @@ namespace WpfVlc
         }
 
         #endregion
+
+        #region other
+        public string BackColor { get; set; }
+
+
+        public float FPS { get { return MediaPlayer.FPS; } }
+
+        #endregion
+
         #endregion
 
         #region local var
