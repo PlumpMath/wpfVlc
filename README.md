@@ -1,13 +1,9 @@
-Vlc.DotNet
-==========
+WpfVlc
+======
 
-.NET control that hosts the audio/video capabilities of the VLC libraries
+.NET  wpf control that hosts the audio/video capabilities of the VLC libraries
 
-This is the new repository for the next version of VideoLan DotNet for WinForm & WPF which is currently in dev.
-
-Branch | Build | Description
---- | --- | ---
-master | [![Build status](https://ci.appveyor.com/api/projects/status/lkx1ojkcgq51yfro/branch/master?svg=true)](https://ci.appveyor.com/project/ZeBobo5/vlc-dotnet/branch/master) | use the latest version of libvlc
+This is the new repository is base on the [Vlc.DotNet](https://github.com/ZeBobo5/Vlc.DotNet)
 
 NuGet Packages
 --------------
@@ -23,7 +19,5 @@ Packages are available for Vlc libraries
 
 Latest News
 --------------
-21-12-2015
-- Merge pull requests. Thanks for your contributions
-- Auto deployment of NuGet Packages on each master branch push
-
+2017-4-14
+- Add new subtitle or disable subtitle
