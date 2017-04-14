@@ -21,3 +21,4 @@ Latest News
 --------------
 2017-4-14
 - Add new subtitle or disable subtitle
+- Convert VlcControl as a ViewModel, so you can use it with binding
