@@ -10,6 +10,7 @@ using System.Runtime.CompilerServices;
 using Vlc.DotNet.Core;
 using System.IO;
 using System.Windows.Threading;
+using Vlc.DotNet.Core.Interops.Signatures;
 
 namespace WpfVlc
 {
@@ -60,15 +61,25 @@ namespace WpfVlc
         DateTime old_time;
         DateTime now;
         long delta;
+
+        public delegate void TimeCallbackDemo(long time);
+        public event TimeCallbackDemo TimeCallback;
         void timer_Tick(object sender, EventArgs e)
         {
             // calc delta
             now = DateTime.UtcNow;
             delta = (long)((now - old_time).Milliseconds * MediaPlayer.Rate);
             old_time = now;
-            
+
+            if (wait_for_update)
+                return;
+
             this.time.time +=delta;
+
+            if (TimeCallback != null) TimeCallback(this.time.time);
+
             RaisePropertyChanged("Time");
+
 
 
             //timeFPS = (int)((1000 / delta) + timeFPS) / 2;
@@ -153,6 +164,7 @@ namespace WpfVlc
             {
                 time = e.NewTime;
                 second = e.NewTime;
+                wait_for_update = false;
 
                 RaisePropertyChanged("Second");
             }));
@@ -329,6 +341,9 @@ namespace WpfVlc
                 }
 
                 isPlay = value;
+
+                wait_for_update = true;
+
                 if (value)
                     Play();
                 else
@@ -359,6 +374,8 @@ namespace WpfVlc
         bool is_end = false;
         bool vlc_ok = false;
         bool is_open = false;
+
+        bool wait_for_update = true;
 
         public string background = "#FF252525";
 
