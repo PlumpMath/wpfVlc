@@ -82,7 +82,7 @@ namespace WpfVlc
 
         void RegistCallback()
         {
-            //MediaPlayer.BackColor = System.Drawing.Color.FromString(BackColor);
+            MediaPlayer.BackColor = System.Drawing.ColorTranslator.FromHtml(background);
 
             
             MediaPlayer.VlcLibDirectoryNeeded += VlcLibDirectoryNeeded;
@@ -359,6 +359,8 @@ namespace WpfVlc
         bool is_end = false;
         bool vlc_ok = false;
         bool is_open = false;
+
+        public string background = "#FF252525";
 
         #endregion
 
