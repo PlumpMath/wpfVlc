@@ -17,6 +17,9 @@ namespace Vlc.DotNet.Wpf.Samples
             setpath();
             myControl.EndInit();
             this.DataContext = myControl;
+
+            //myControl.Source = @"r:\[UHA-Wing] [Nyanbo!][26][1080p][BIG5].mp4";
+            myControl.Source = @"r:\1.mkv";
         }
 
         WpfVlc.VlcControl myControl = new WpfVlc.VlcControl();
@@ -33,12 +36,12 @@ namespace Vlc.DotNet.Wpf.Samples
                 myControl.LibVlcPath = Path.Combine(currentDirectory, @"..\..\..\lib\x64\");
         }
 
+
         private void OnPlayButtonClick(object sender, RoutedEventArgs e)
         {
             //myControl.MediaPlayer.Play(new Uri("http://download.blender.org/peach/bigbuckbunny_movies/big_buck_bunny_480p_surround-fix.avi"));
-            
-            myControl.Source = @"r:\[UHA-Wing] [Nyanbo!][26][1080p][BIG5].mp4";
-            myControl.IsPlay = true;
+
+            myControl.IsPlay = !myControl.IsPlay;
         }
 
         private void OnForwardButtonClick(object sender, RoutedEventArgs e)

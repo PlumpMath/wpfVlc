@@ -18,14 +18,35 @@
         <ContentControl Grid.Row="0" Content="{Binding}"/>
 
         <Button Grid.Row="1" Click="OnPlayButtonClick">Play</Button>
-        <Button Grid.Row="2" Click="OnForwardButtonClick" x:Name="Forward">Forward</Button>
-        <StackPanel Grid.Row="3">
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal">
             <TextBlock Text="{Binding Time}"/>
+            <TextBlock Text=" / "/>
+            <TextBlock Text="{Binding Second}"/>
+            <TextBlock Text=" / "/>
             <TextBlock Text="{Binding TotalTime}"/>
-            <TextBlock Text="{Binding Position}"/>
-            <TextBlock Text="{Binding FPS}"/>
+
+            <TextBlock Text="Volume" Margin="10 0 0 0"/>
+            <Slider Value="{Binding Volume}"
+                    IsMoveToPointEnabled="True"
+                    Minimum="0" Maximum="100" Width="100"/>
+
+            <TextBlock Text="Rate" Margin="10 0 0 0"/>
+            <Slider Value="{Binding Rate}"
+                    IsMoveToPointEnabled="True"
+                    Minimum="0.5" Maximum="2" Width="100"/>
+
+
 
         </StackPanel>
-        
+        <Slider     Value="{Binding Position}" 
+                    Grid.Row="3"
+                    HorizontalAlignment="Stretch" Orientation="Horizontal" 
+                    IsMoveToPointEnabled="True"
+                    Minimum="0" Maximum="1"/>
+
+        <TextBlock Text="{Binding TimeFPS}"
+                   Grid.Row="4"/>
+
     </Grid>
 </Window>

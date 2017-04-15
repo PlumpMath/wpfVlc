@@ -9,6 +9,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Vlc.DotNet.Core;
 using System.IO;
+using System.Windows.Threading;
 
 namespace WpfVlc
 {
@@ -39,10 +40,43 @@ namespace WpfVlc
 
             RegistCallback();
 
+
+
+            RaisePropertyChanged("Rate");
+            RaisePropertyChanged("Volume");
+
+            /*
+             * set a timer
+             */
+            timer = new DispatcherTimer(DispatcherPriority.Render);
+            timer.Interval = TimeSpan.FromMilliseconds(17);
+            timer.Tick += timer_Tick;
+            old_time = DateTime.UtcNow;
         }
 
+        #region timer callback
+        DispatcherTimer timer;
 
-        
+        DateTime old_time;
+        DateTime now;
+        long delta;
+        void timer_Tick(object sender, EventArgs e)
+        {
+            // calc delta
+            now = DateTime.UtcNow;
+            delta = (long)((now - old_time).Milliseconds * MediaPlayer.Rate);
+            old_time = now;
+            
+            this.time.time +=delta;
+            RaisePropertyChanged("Time");
+
+
+            //timeFPS = (int)((1000 / delta) + timeFPS) / 2;
+            //RaisePropertyChanged("TimeFPS");
+
+        }
+        #endregion
+
 
         #region vlc callback
 
@@ -118,8 +152,9 @@ namespace WpfVlc
             this.Dispatcher.BeginInvoke(new Action(delegate
             {
                 time = e.NewTime;
+                second = e.NewTime;
 
-                RaisePropertyChanged("Time");
+                RaisePropertyChanged("Second");
             }));
 
         }
@@ -184,6 +219,8 @@ namespace WpfVlc
             }
         }
 
+        public Time second;
+        public Time Second { get { return second;} }
 
 
         /*  
@@ -226,14 +263,12 @@ namespace WpfVlc
 
         #region vidoe or audio control
 
-        private int volume;
         public int Volume
         {
-            get { return volume; }
+            get { return MediaPlayer.Audio.Volume; }
             set
             {
-                volume = value;
-
+                if (value < 0) return;
 
                 MediaPlayer.Audio.Volume = value;
 
@@ -241,13 +276,13 @@ namespace WpfVlc
             }
         }
 
-        private float rate;
         public float Rate
         {
-            get { return rate; }
+            get { return MediaPlayer.Rate; }
             set
             {
-                rate = value;
+                if (value < 0) return;
+
                 MediaPlayer.Rate = value;
                 RaisePropertyChanged();
             }
@@ -312,6 +347,10 @@ namespace WpfVlc
 
         public float FPS { get { return MediaPlayer.FPS; } }
 
+        private int timeFPS;
+        public int TimeFPS { get{return timeFPS;} }
+
+        
         #endregion
 
         #endregion
@@ -329,6 +368,7 @@ namespace WpfVlc
         {
             if (!vlc_ok) return;
 
+            
             if (is_end)
             {
                 MediaPlayer.Play(new FileInfo(source));
@@ -336,6 +376,8 @@ namespace WpfVlc
                 is_end = false;
             }
 
+            old_time = DateTime.UtcNow;
+            timer.Start();
             MediaPlayer.Play();
 
             // set position if need
@@ -346,6 +388,7 @@ namespace WpfVlc
         {
             if (!vlc_ok || !is_open) return;
 
+            timer.Stop();
             MediaPlayer.Pause();
         }
 
@@ -354,8 +397,14 @@ namespace WpfVlc
             this.source = path;
             is_open = true;
 
+            timer.Stop();
             MediaPlayer.Pause();
-            MediaPlayer.SetMedia(new FileInfo(source), null);
+            
+            //detect path format
+            if (path.Contains("http") || path.Contains("https"))
+                MediaPlayer.SetMedia(new Uri(source));
+            else
+                MediaPlayer.SetMedia(new FileInfo(source), null);
 
             // is already open or play a media
             IsPlay = false;
@@ -371,6 +420,7 @@ namespace WpfVlc
         public void EndInit()
         {
             MediaPlayer.EndInit();
+
         }
 
         #endregion
