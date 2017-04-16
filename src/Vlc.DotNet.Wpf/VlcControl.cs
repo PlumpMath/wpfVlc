@@ -73,9 +73,9 @@ namespace WpfVlc
 
             if (wait_for_update)
                 return;
-
+            
             this.time.time +=delta;
-
+            
             if (TimeCallback != null) TimeCallback(this.time.time);
 
             RaisePropertyChanged("Time");
@@ -162,8 +162,11 @@ namespace WpfVlc
         {
             this.Dispatcher.BeginInvoke(new Action(delegate
             {
-                time = e.NewTime;
-                second = e.NewTime;
+                if (MediaPlayer.Time < this.time.time && !is_reopen)
+                    return;
+
+                time = MediaPlayer.Time;
+                second = time;
                 wait_for_update = false;
 
                 RaisePropertyChanged("Second");
@@ -175,7 +178,7 @@ namespace WpfVlc
         {
             this.Dispatcher.BeginInvoke(new Action(delegate
             {
-                position = e.NewPosition;
+                position = MediaPlayer.Position;
 
                 RaisePropertyChanged("Position");
                 RaisePropertyChanged("FPS");
@@ -184,11 +187,16 @@ namespace WpfVlc
 
         }
 
+        public delegate void TotalTimeChangedDemo(long total_time);
+        public event TotalTimeChangedDemo TotalTimeChanged;
         void LengthChanged(object sender, VlcMediaPlayerLengthChangedEventArgs e)
         {
             this.Dispatcher.BeginInvoke(new Action(delegate
             {
                 //totalTime = (long)e.NewLength; // this lenght is error
+
+                if (TotalTimeChanged != null) TotalTimeChanged(MediaPlayer.Length);
+
                 totalTime = MediaPlayer.Length;
                 RaisePropertyChanged("TotalTime");
 
@@ -225,6 +233,8 @@ namespace WpfVlc
             {
                 if (!MediaPlayer.IsPlaying)
                     return;
+
+                wait_for_update = true;
                 if (value == time) return;
                 time = value;
                 MediaPlayer.Time = value;
@@ -250,6 +260,9 @@ namespace WpfVlc
                     return;
                 if (value < 0) return;
                 if (value == position) return;
+
+                wait_for_update = true;
+
                 position = value;
                 MediaPlayer.Position = (float)value;
             }
@@ -375,6 +388,7 @@ namespace WpfVlc
         bool vlc_ok = false;
         bool is_open = false;
 
+        bool is_reopen = false;
         bool wait_for_update = true;
 
         public string background = "#FF252525";
@@ -415,6 +429,7 @@ namespace WpfVlc
         {
             this.source = path;
             is_open = true;
+            is_reopen = true;
 
             timer.Stop();
             MediaPlayer.Pause();
@@ -425,12 +440,15 @@ namespace WpfVlc
             else
                 MediaPlayer.SetMedia(new FileInfo(source), null);
 
+
+
             // is already open or play a media
             IsPlay = false;
             // go to start
             position = 0;
             RaisePropertyChanged("Position");
 
+            MediaPlayer.Preview();
 
             // call function if need
             if (EndReached != null) EndReached();

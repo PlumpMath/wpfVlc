@@ -385,6 +385,14 @@ namespace Vlc.DotNet.Core
         }
 
 
+        [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int libvlc_media_player_next_frame(IntPtr p_mi);
+        public void Preview()
+        {
+            libvlc_media_player_next_frame(myMediaPlayerInstance);
+        }
+
+
         #endregion
     }
 }

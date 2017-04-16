@@ -424,6 +424,11 @@ namespace Vlc.DotNet.Forms
         {
             get { return myVlcMediaPlayer.FramesPerSecond; }
         }
+
+        public void Preview()
+        {
+            myVlcMediaPlayer.Preview();
+        }
         #endregion
     }
 }
