@@ -19,7 +19,7 @@ namespace Vlc.DotNet.Wpf.Samples
             this.DataContext = myControl;
 
             //myControl.Source = @"r:\[UHA-Wing] [Nyanbo!][26][1080p][BIG5].mp4";
-            myControl.Source = @"r:\1.mkv";
+            myControl.Source = @"r:\1.mp4";
         }
 
         WpfVlc.VlcControl myControl = new WpfVlc.VlcControl();

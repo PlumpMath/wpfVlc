@@ -162,7 +162,7 @@ namespace WpfVlc
         {
             this.Dispatcher.BeginInvoke(new Action(delegate
             {
-                if (MediaPlayer.Time < this.time.time && !is_reopen)
+                if (MediaPlayer.Time < this.time.time)
                     return;
 
                 time = MediaPlayer.Time;
@@ -388,7 +388,7 @@ namespace WpfVlc
         bool vlc_ok = false;
         bool is_open = false;
 
-        bool is_reopen = false;
+        
         bool wait_for_update = true;
 
         public string background = "#FF252525";
@@ -425,11 +425,25 @@ namespace WpfVlc
             MediaPlayer.Pause();
         }
 
+        void Reset()
+        {
+            // is already open or play a media
+            IsPlay = false;
+            
+            // go to start
+            position = 0;
+            time = 0;
+            RaisePropertyChanged("Position");
+            RaisePropertyChanged("Time");
+
+
+        }
+
         public void Open(string path)
         {
             this.source = path;
             is_open = true;
-            is_reopen = true;
+            
 
             timer.Stop();
             MediaPlayer.Pause();
@@ -440,13 +454,7 @@ namespace WpfVlc
             else
                 MediaPlayer.SetMedia(new FileInfo(source), null);
 
-
-
-            // is already open or play a media
-            IsPlay = false;
-            // go to start
-            position = 0;
-            RaisePropertyChanged("Position");
+            Reset();
 
             MediaPlayer.Preview();
 
